@@ -4,9 +4,6 @@
 [submodule "aw-client"]
 	path = aw-client
 	url = https://github.com/ActivityWatch/aw-client.git
-[submodule "aw-server"]
-	path = aw-server
-	url = https://github.com/ActivityWatch/aw-server.git
 [submodule "aw-watcher-afk"]
 	path = aw-watcher-afk
 	url = https://github.com/ActivityWatch/aw-watcher-afk.git
@@ -22,3 +19,6 @@
 [submodule "aw-watcher-input"]
 	path = aw-watcher-input
 	url = https://github.com/ActivityWatch/aw-watcher-input.git
+[submodule "aww-server"]
+	path = aww-server
+	url = https://github.com/saisai/aw-server.git
