@@ -19,6 +19,6 @@
 [submodule "aw-watcher-input"]
 	path = aw-watcher-input
 	url = https://github.com/ActivityWatch/aw-watcher-input.git
-[submodule "aww-server"]
-	path = aww-server
-	url = https://github.com/saisai/aw-server.git
+[submodule "aa-server"]
+	path = aa-server
+	url = https://github.com/saisai/aa-server.git
