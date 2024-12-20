@@ -13,12 +13,12 @@
 [submodule "aw-notify"]
 	path = aw-notify
 	url = https://github.com/ErikBjare/aw-notify.git
-[submodule "aw-watcher-input"]
-	path = aw-watcher-input
-	url = https://github.com/ActivityWatch/aw-watcher-input.git
 [submodule "aa-server"]
 	path = aa-server
 	url = https://github.com/saisai/aa-server.git
 [submodule "aa-watcher-afk"]
 	path = aa-watcher-afk
 	url = https://github.com/saisai/aa-watcher-afk.git
+[submodule "aa-watcher-input"]
+	path = aa-watcher-input
+	url = https://github.com/saisai/aa-watcher-input.git
