@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := aw-core aw-client aw-qt aw-server aw-server-rust aw-watcher-afk aw-watcher-window
+SUBMODULES := aa-core aa-client aa-qt aa-server aw-watcher-afk aw-watcher-window
 
 # Exclude aw-server-rust if SKIP_SERVER_RUST is true
 ifeq ($(SKIP_SERVER_RUST),true)
@@ -19,7 +19,7 @@ ifeq ($(SKIP_SERVER_RUST),true)
 endif
 # Include extras if AW_EXTRAS is true
 ifeq ($(AW_EXTRAS),true)
-	SUBMODULES := $(SUBMODULES) aw-notify aw-watcher-input
+	SUBMODULES := $(SUBMODULES) aa-notify aa-watcher-input
 endif
 
 # A function that checks if a target exists in a Makefile
@@ -40,27 +40,19 @@ TYPECHECKABLES := $(foreach dir,$(SUBMODULES),$(call has_target,$(dir),typecheck
 # What it does:
 #  - Installs all the Python modules
 #  - Builds the web UI and bundles it with aw-server
-build: aw-core/.git
+build: aa-core/.git
 #	needed due to https://github.com/pypa/setuptools/issues/1963
 #	would ordinarily be specified in pyproject.toml, but is not respected due to https://github.com/pypa/setuptools/issues/1963
-	pip install 'setuptools>49.1.1'
-	@if [ "$(SKIP_SERVER_RUST)" = "false" ]; then \
-		if (which cargo); then \
-			echo 'Rust found!'; \
-		else \
-			echo 'ERROR: Rust not found, try running with SKIP_SERVER_RUST=true'; \
-			exit 1; \
-		fi \
-	fi
+
 	for module in $(SUBMODULES); do \
 		echo "Building $$module"; \
 		make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module build"; exit 2; }; \
 	done
 #   The below is needed due to: https://github.com/ActivityWatch/activitywatch/issues/173
-	make --directory=aw-client build
-	make --directory=aw-core build
+	make --directory=aa-client build
+	make --directory=aa-core build
 #	Needed to ensure that the server has the correct version set
-	python -c "import aw_server; print(aw_server.__version__)"
+	python -c "import aa_server; print(aa_server.__version__)"
 
 
 # Install
@@ -69,7 +61,7 @@ build: aw-core/.git
 # Installs things like desktop/menu shortcuts.
 # Might in the future configure autostart on the system.
 install:
-	make --directory=aw-qt install
+	make --directory=aa-qt install
 # Installation is already happening in the `make build` step currently.
 # We might want to change this.
 # We should also add some option to install as user (pip3 install --user)
@@ -101,7 +93,7 @@ typecheck:
 #
 # Uninstalls all the Python modules.
 uninstall:
-	modules=$$(pip3 list --format=legacy | grep 'aw-' | grep -o '^aw-[^ ]*'); \
+	modules=$$(pip3 list --format=legacy | grep 'aa-' | grep -o '^aa-[^ ]*'); \
 	for module in $$modules; do \
 		echo "Uninstalling $$module"; \
 		pip3 uninstall -y $$module; \
@@ -128,9 +120,9 @@ test-integration:
 %/.git:
 	git submodule update --init --recursive
 
-ICON := "aw-qt/media/logo/logo.png"
+ICON := "aa-qt/media/logo/logo.png"
 
-aw-qt/media/logo/logo.icns:
+aa-qt/media/logo/logo.icns:
 	mkdir -p build/MyIcon.iconset
 	sips -z 16 16     $(ICON) --out build/MyIcon.iconset/icon_16x16.png
 	sips -z 32 32     $(ICON) --out build/MyIcon.iconset/icon_16x16@2x.png
@@ -144,10 +136,10 @@ aw-qt/media/logo/logo.icns:
 	cp				  $(ICON)       build/MyIcon.iconset/icon_512x512@2x.png
 	iconutil -c icns build/MyIcon.iconset
 	rm -R build/MyIcon.iconset
-	mv build/MyIcon.icns aw-qt/media/logo/logo.icns
+	mv build/MyIcon.icns aa-qt/media/logo/logo.icns
 
-dist/ActivityWatch.app: aw-qt/media/logo/logo.icns
-	pyinstaller --clean --noconfirm aw.spec
+dist/ActivityWatch.app: aa-qt/media/logo/logo.icns
+	pyinstaller --clean --noconfirm aa.spec
 
 dist/ActivityWatch.dmg: dist/ActivityWatch.app
 	# NOTE: This does not codesign the dmg, that is done in the CI config
@@ -165,9 +157,9 @@ package:
 		cp -r $$dir/dist/$$dir dist/activitywatch; \
 	done
 # Move aw-qt to the root of the dist folder
-	mv dist/activitywatch/aw-qt aw-qt-tmp
-	mv aw-qt-tmp/* dist/activitywatch
-	rmdir aw-qt-tmp
+	mv dist/activitywatch/aa-qt aa-qt-tmp
+	mv aa-qt-tmp/* dist/activitywatch
+	rmdir aa-qt-tmp
 # Remove problem-causing binaries
 	rm -f dist/activitywatch/libdrm.so.2       # see: https://github.com/ActivityWatch/activitywatch/issues/161
 	rm -f dist/activitywatch/libharfbuzz.so.0  # see: https://github.com/ActivityWatch/activitywatch/issues/660#issuecomment-959889230
