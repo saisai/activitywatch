@@ -1,18 +1,3 @@
-[submodule "aw-core"]
-	path = aw-core
-	url = https://github.com/ActivityWatch/aw-core.git
-[submodule "aw-client"]
-	path = aw-client
-	url = https://github.com/ActivityWatch/aw-client.git
-[submodule "aw-qt"]
-	path = aw-qt
-	url = https://github.com/ActivityWatch/aw-qt.git
-[submodule "aw-watcher-window"]
-	path = aw-watcher-window
-	url = https://github.com/ActivityWatch/aw-watcher-window.git
-[submodule "aw-notify"]
-	path = aw-notify
-	url = https://github.com/ErikBjare/aw-notify.git
 [submodule "aa-server"]
 	path = aa-server
 	url = https://github.com/saisai/aa-server.git
@@ -22,3 +7,15 @@
 [submodule "aa-watcher-input"]
 	path = aa-watcher-input
 	url = https://github.com/saisai/aa-watcher-input.git
+[submodule "aa-qt"]
+	path = aa-qt
+	url = https://github.com/saisai/aa-qt.git
+[submodule "aa-core"]
+	path = aa-core
+	url = https://github.com/saisai/aa-core.git
+[submodule "aa-notify"]
+	path = aa-notify
+	url = https://github.com/saisai/aa-notify.git
+[submodule "aa-client"]
+	path = aa-client
+	url = https://github.com/saisai/aa-client.git
