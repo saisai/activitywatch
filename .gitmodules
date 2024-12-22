@@ -19,3 +19,6 @@
 [submodule "aa-client"]
 	path = aa-client
 	url = https://github.com/saisai/aa-client.git
+[submodule "aa-watcher-window"]
+	path = aa-watcher-window
+	url = https://github.com/saisai/aa-watcher-window.git

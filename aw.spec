@@ -7,7 +7,7 @@ import shlex
 import subprocess
 from pathlib import Path
 
-import aw_core
+import aa_core
 import flask_restx
 
 
@@ -78,52 +78,52 @@ codesign_identity = os.environ.get("APPLE_PERSONALID", "").strip()
 if not codesign_identity:
     print("Environment variable APPLE_PERSONALID not set. Releases won't be signed.")
 
-aw_core_path = Path(os.path.dirname(aw_core.__file__))
+aa_core_path = Path(os.path.dirname(aa_core.__file__))
 restx_path = Path(os.path.dirname(flask_restx.__file__))
 
-aws_location = Path("aw-server")
-aw_server_rust_location = Path("aw-server-rust")
-aw_server_rust_bin = aw_server_rust_location / "target/package/aw-server-rust"
-aw_sync_bin = aw_server_rust_location / "target/package/aw-sync"
-aw_qt_location = Path("aw-qt")
-awa_location = Path("aw-watcher-afk")
-aww_location = Path("aw-watcher-window")
-awi_location = Path("aw-watcher-input")
-aw_notify_location = Path("aw-notify")
+aas_location = Path("aa-server")
+aa_server_rust_location = Path("aa-server-rust")
+aa_server_rust_bin = aa_server_rust_location / "target/package/aa-server-rust"
+aa_sync_bin = aa_server_rust_location / "target/package/aa-sync"
+aa_qt_location = Path("aa-qt")
+aaa_location = Path("aa-watcher-afk")
+aaw_location = Path("aa-watcher-window")
+aai_location = Path("aa-watcher-input")
+aa_notify_location = Path("aa-notify")
 
 if platform.system() == "Darwin":
-    icon = aw_qt_location / "media/logo/logo.icns"
+    icon = aa_qt_location / "media/logo/logo.icns"
 else:
-    icon = aw_qt_location / "media/logo/logo.ico"
+    icon = aa_qt_location / "media/logo/logo.ico"
 
 skip_rust = False
-if not aw_server_rust_bin.exists():
+if not aa_server_rust_bin.exists():
     skip_rust = True
-    print("Skipping Rust build because aw-server-rust binary not found.")
+    print("Skipping Rust build because aa-server-rust binary not found.")
 
 
-aw_qt_a = build_analysis(
-    "aw-qt",
-    aw_qt_location,
-    binaries=[(aw_server_rust_bin, "."), (aw_sync_bin, ".")] if not skip_rust else [],
+aa_qt_a = build_analysis(
+    "aa-qt",
+    aa_qt_location,
+    binaries=[(aa_server_rust_bin, "."), (aa_sync_bin, ".")] if not skip_rust else [],
     datas=[
-        (aw_qt_location / "resources/aw-qt.desktop", "aw_qt/resources"),
-        (aw_qt_location / "media", "aw_qt/media"),
+        (aa_qt_location / "resources/aa-qt.desktop", "aa_qt/resources"),
+        (aa_qt_location / "media", "aa_qt/media"),
     ],
 )
-aw_server_a = build_analysis(
-    "aw-server",
-    aws_location,
+aa_server_a = build_analysis(
+    "aa-server",
+    aas_location,
     datas=[
-        (aws_location / "aw_server/static", "aw_server/static"),
+        (aas_location / "aa_server/static", "aa_server/static"),
         (restx_path / "templates", "flask_restx/templates"),
         (restx_path / "static", "flask_restx/static"),
-        (aw_core_path / "schemas", "aw_core/schemas"),
+        (aa_core_path / "schemas", "aa_core/schemas"),
     ],
 )
-aw_watcher_afk_a = build_analysis(
-    "aw_watcher_afk",
-    awa_location,
+aa_watcher_afk_a = build_analysis(
+    "aa_watcher_afk",
+    aaa_location,
     hiddenimports=[
         "Xlib.keysymdef.miscellany",
         "Xlib.keysymdef.latin1",
@@ -147,77 +147,77 @@ aw_watcher_afk_a = build_analysis(
         "pynput.mouse._darwin",
     ],
 )
-aw_watcher_input_a = build_analysis("aw_watcher_input", awi_location)
-aw_watcher_window_a = build_analysis(
-    "aw_watcher_window",
-    aww_location,
+aa_watcher_input_a = build_analysis("aa_watcher_input", aai_location)
+aa_watcher_window_a = build_analysis(
+    "aa_watcher_window",
+    aaw_location,
     binaries=(
         [
             (
-                aww_location / "aw_watcher_window/aw-watcher-window-macos",
-                "aw_watcher_window",
+                aaw_location / "aa_watcher_window/aa-watcher-window-macos",
+                "aa_watcher_window",
             )
         ]
         if platform.system() == "Darwin"
         else []
     ),
     datas=[
-        (aww_location / "aw_watcher_window/printAppStatus.jxa", "aw_watcher_window")
+        (aaw_location / "aa_watcher_window/printAppStatus.jxa", "aa_watcher_window")
     ],
 )
-aw_notify_a = build_analysis(
-    "aw_notify", aw_notify_location, hiddenimports=["desktop_notifier.resources"]
+aa_notify_a = build_analysis(
+    "aa_notify", aa_notify_location, hiddenimports=["desktop_notifier.resources"]
 )
 
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
 # the analysis paired with the script name and the bin name
 MERGE(
-    (aw_server_a, "aw-server", "aw-server"),
-    (aw_qt_a, "aw-qt", "aw-qt"),
-    (aw_watcher_afk_a, "aw-watcher-afk", "aw-watcher-afk"),
-    (aw_watcher_window_a, "aw-watcher-window", "aw-watcher-window"),
-    (aw_watcher_input_a, "aw-watcher-input", "aw-watcher-input"),
-    (aw_notify_a, "aw-notify", "aw-notify"),
+    (aa_server_a, "aa-server", "aa-server"),
+    (aa_qt_a, "aa-qt", "aa-qt"),
+    (aa_watcher_afk_a, "aa-watcher-afk", "aa-watcher-afk"),
+    (aa_watcher_window_a, "aa-watcher-window", "aa-watcher-window"),
+    (aa_watcher_input_a, "aa-watcher-input", "aa-watcher-input"),
+    (aa_notify_a, "aa-notify", "aa-notify"),
 )
 
 
-# aw-server
-aws_coll = build_collect(aw_server_a, "aw-server")
+# aa-server
+aas_coll = build_collect(aa_server_a, "aa-server")
 
-# aw-watcher-window
-aww_coll = build_collect(aw_watcher_window_a, "aw-watcher-window")
+# aa-watcher-window
+aaw_coll = build_collect(aa_watcher_window_a, "aa-watcher-window")
 
-# aw-watcher-afk
-awa_coll = build_collect(aw_watcher_afk_a, "aw-watcher-afk")
+# aa-watcher-afk
+aaa_coll = build_collect(aa_watcher_afk_a, "aa-watcher-afk")
 
-# aw-qt
-awq_coll = build_collect(
-    aw_qt_a,
-    "aw-qt",
+# aa-qt
+aaq_coll = build_collect(
+    aa_qt_a,
+    "aa-qt",
     console=False if platform.system() == "Windows" else True,
 )
 
-# aw-watcher-input
-awi_coll = build_collect(aw_watcher_input_a, "aw-watcher-input")
+# aa-watcher-input
+aai_coll = build_collect(aa_watcher_input_a, "aa-watcher-input")
 
-aw_notify_coll = build_collect(aw_notify_a, "aw-notify")
+aa_notify_coll = build_collect(aa_notify_a, "aa-notify")
 
 if platform.system() == "Darwin":
     app = BUNDLE(
-        awq_coll,
-        aws_coll,
-        aww_coll,
-        awa_coll,
-        awi_coll,
-        aw_notify_coll,
+        aaq_coll,
+        aas_coll,
+        aaw_coll,
+        aaa_coll,
+        aai_coll,
+        aa_notify_coll,
         name="ActivityWatch.app",
         icon=icon,
         bundle_identifier="net.activitywatch.ActivityWatch",
         version=current_release.lstrip("v"),
         info_plist={
             "NSPrincipalClass": "NSApplication",
-            "CFBundleExecutable": "MacOS/aw-qt",
+            "CFBundleExecutable": "MacOS/aa-qt",
             "CFBundleIconFile": "logo.icns",
             "NSAppleEventsUsageDescription": "Please grant access to use Apple Events",
             # This could be set to a more specific version string (including the commit id, for example)
