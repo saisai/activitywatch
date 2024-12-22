@@ -4,11 +4,11 @@ from datetime import datetime
 from collections import defaultdict
 import logging
 
-import aw_core
+import aa_core
 
 logging.basicConfig()
 
-log_dir = aw_core.dirs.get_log_dir("")
+log_dir = aa_core.dirs.get_log_dir("")
 
 
 def get_filepaths():

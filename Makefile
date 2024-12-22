@@ -40,11 +40,12 @@ TYPECHECKABLES := $(foreach dir,$(SUBMODULES),$(call has_target,$(dir),typecheck
 # What it does:
 #  - Installs all the Python modules
 #  - Builds the web UI and bundles it with aw-server
-build: aa-core/.git
+build: 
+# 	aa-core/.git
 #	needed due to https://github.com/pypa/setuptools/issues/1963
 #	would ordinarily be specified in pyproject.toml, but is not respected due to https://github.com/pypa/setuptools/issues/1963
 
-	for module in $(SUBMODULES); do \
+	@for module in $(SUBMODULES); do \
 		echo "Building $$module"; \
 		make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module build"; exit 2; }; \
 	done
@@ -152,7 +153,7 @@ dist/notarize:
 package:
 	rm -rf dist
 	mkdir -p dist/activitywatch
-	for dir in $(PACKAGEABLES); do \
+	@for dir in $(PACKAGEABLES); do \
 		make --directory=$$dir package; \
 		cp -r $$dir/dist/$$dir dist/activitywatch; \
 	done

@@ -71,14 +71,14 @@ def main():
     # preferred output order for submodules
     repo_order = [
         "activitywatch",
-        "aw-server",
-        "aw-server-rust",
-        "aw-webui",
-        "aw-watcher-afk",
-        "aw-watcher-window",
-        "aw-qt",
-        "aw-core",
-        "aw-client",
+        "aa-server",
+        "aa-server-rust",
+        "aa-webui",
+        "aa-watcher-afk",
+        "aa-watcher-window",
+        "aa-qt",
+        "aa-core",
+        "aa-client",
     ]
 
     build(
